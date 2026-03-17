@@ -562,11 +562,20 @@
     <div class="container-wrapper">
         <div class="chatbot-container">
             <div class="header">
-                <div class="header-logo">🗺️</div>
+                <div class="header-logo">
+                    <svg viewBox="0 0 100 100" width="64" height="64" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+                        <!-- NUST Logo Circle -->
+                        <circle cx="50" cy="50" r="48" fill="rgba(0, 168, 232, 0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                        <circle cx="50" cy="30" r="12" fill="rgba(255,255,255,0.9)"/>
+                        <polygon points="50,45 35,65 65,65" fill="rgba(255,255,255,0.9)"/>
+                        <rect x="40" y="68" width="20" height="12" fill="rgba(255,255,255,0.9)"/>
+                        <text x="50" y="58" font-size="8" fill="rgba(0,51,102,0.6)" text-anchor="middle" font-weight="bold">NUST</text>
+                    </svg>
+                </div>
                 <div class="header-content">
-                    <h1>NUST Navigator</h1>
-                    <p>Smart Campus Guide</p>
-                    <p class="subtitle">Explore campus seamlessly</p>
+                    <h1>Campus Navigator</h1>
+                    <p>Your friendly guide around NUST</p>
+                    <p class="subtitle">Let's explore together! 👋</p>
                 </div>
             </div>
 
@@ -577,7 +586,7 @@
                     <input 
                         type="text" 
                         id="userInput" 
-                        placeholder="Type a building name or ask for directions..."
+                        placeholder="Just tell me where you're headed..."
                         autocomplete="off"
                     >
                 </div>
@@ -720,16 +729,16 @@
 
         function handleInitial(input) {
             if (input.includes('help') || input.includes('hi') || input.includes('hello') || input.includes('route') || input.includes('navigate')) {
-                addMessage('👋 Welcome to NUST Navigator!');
+                addMessage('Hey there! 👋');
                 setTimeout(() => {
-                    addMessage('I\'m your intelligent campus guide, powered by cutting-edge pathfinding algorithms. I\'ll help you discover the most efficient routes between any campus buildings. Let\'s explore!');
+                    addMessage('I\'m here to help you get around campus without getting lost. Just tell me where you are and where you\'re headed, and I\'ll show you the quickest way!');
                 }, 400);
                 setTimeout(() => {
                     showBuildingSelection('start');
                 }, 900);
                 conversationState = 'waiting_start';
             } else {
-                addMessage('Hello! 👋 Try "navigate", "help", or just ask me for directions to explore the campus!');
+                addMessage('Hey! Looking for directions? Just say "navigate" or tell me where you need to go. I gotchu! 😊');
             }
         }
 
@@ -737,16 +746,16 @@
             const building = findBuildingMatch(input);
             if (building) {
                 startBuilding = building;
-                addMessage(`✅ Starting point: <strong>${building}</strong> 📍`);
+                addMessage(`Cool! So you're at the ${building}. 📍`);
                 setTimeout(() => {
-                    addMessage('Great! Now, where are you headed? Choose your destination:');
+                    addMessage('Now, where are you trying to get to?');
                 }, 400);
                 setTimeout(() => {
                     showBuildingSelection('end');
                 }, 900);
                 conversationState = 'waiting_end';
             } else {
-                addMessage('❌ Hmm, I didn\'t catch that building. Pick from the available options:');
+                addMessage('Hmm, I didn\'t quite get that. Which building are you at? Pick one from the list:');
                 setTimeout(() => {
                     showBuildingSelection('start');
                 }, 400);
@@ -759,9 +768,9 @@
                 endBuilding = building;
 
                 if (startBuilding === endBuilding) {
-                    addMessage('🎯 You\'re already there! Enjoy your time at campus. 😄');
+                    addMessage('Wait... you\'re already there! 😄');
                     setTimeout(() => {
-                        addMessage('Need to go somewhere else? Select a new starting point:');
+                        addMessage('Need to go somewhere else instead?');
                     }, 400);
                     setTimeout(() => {
                         showBuildingSelection('start');
@@ -777,7 +786,7 @@
                     }, 1000);
                 }
             } else {
-                addMessage('❌ Building not found. Please select from the list:');
+                addMessage('Didn\'t catch that. Which building? Choose from the list below:');
                 setTimeout(() => {
                     showBuildingSelection('end');
                 }, 400);
@@ -789,7 +798,7 @@
                 conversationState = 'initial';
                 startBuilding = null;
                 endBuilding = null;
-                addMessage('🛣️ Ready for another adventure! Where would you like to start?');
+                addMessage('No problem! Where are you at now?');
                 setTimeout(() => {
                     showBuildingSelection('start');
                 }, 400);
@@ -798,16 +807,16 @@
                 const building = findBuildingMatch(input);
                 if (building) {
                     startBuilding = building;
-                    addMessage(`✅ New starting point: <strong>${building}</strong> 📍`);
+                    addMessage(`Got it! You're at the ${building}. 📍`);
                     setTimeout(() => {
-                        addMessage('Where would you like to go?');
+                        addMessage('Where are you headed?');
                     }, 400);
                     setTimeout(() => {
                         showBuildingSelection('end');
                     }, 900);
                     conversationState = 'waiting_end';
                 } else {
-                    addMessage('Would you like to navigate elsewhere? Select a starting location:');
+                    addMessage('Just let me know where you\'re starting from:');
                     setTimeout(() => {
                         showBuildingSelection('start');
                     }, 400);
@@ -821,21 +830,21 @@
             if (route.length > 0) {
                 const routeHtml = `
                     <div class="route-info">
-                        <strong>✅ Perfect Route Found!</strong><br>
-                        <strong>📍 From:</strong> ${startBuilding} <span class="tag">START</span><br>
-                        <strong>🎯 To:</strong> ${endBuilding} <span class="tag success">END</span><br>
-                        <strong>📏 Distance:</strong> ${distance}m | <strong>🏢 Stops:</strong> ${route.length}<br>
-                        <strong>🛣️ Path:</strong> ${route.join(' → ')}<br>
-                        <small style="opacity: 0.8;">Optimized route calculated using Dijkstra's algorithm</small>
+                        <strong>🎉 Found it! Here's the quickest route:</strong><br>
+                        <strong>From:</strong> ${startBuilding} <span class="tag">START</span><br>
+                        <strong>To:</strong> ${endBuilding} <span class="tag success">FINISH</span><br>
+                        <strong>Distance:</strong> ${distance} meters | <strong>Buildings:</strong> ${route.length}<br>
+                        <strong>Path:</strong> ${route.join(' → ')}<br>
+                        <small style="opacity: 0.8;">Shortest route just for you</small>
                     </div>
                 `;
                 addMessage(routeHtml, false, true);
 
                 setTimeout(() => {
-                    addMessage('💡 Pro Tip: Routes are calculated for shortest distance. Use nearby entrances for faster access!');
+                    addMessage('Pretty straightforward, right? Just follow the path! 😊');
                 }, 500);
                 setTimeout(() => {
-                    addMessage('Ready for another journey? Select your new starting point:');
+                    addMessage('Need help finding somewhere else?');
                 }, 1000);
                 setTimeout(() => {
                     showBuildingSelection('start');
@@ -845,13 +854,13 @@
             } else {
                 const errorHtml = `
                     <div class="error-info">
-                        <strong>❌ Route Unavailable</strong><br>
-                        Unfortunately, these buildings aren't connected at the moment.
+                        <strong>Hmm, that's odd 😅</strong><br>
+                        I don't have a connection between those buildings in my map yet.
                     </div>
                 `;
                 addMessage(errorHtml, false, true);
                 setTimeout(() => {
-                    addMessage('Let\'s try different buildings:');
+                    addMessage('Try picking a different destination?');
                 }, 400);
                 setTimeout(() => {
                     showBuildingSelection('start');
@@ -872,8 +881,8 @@
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'message-bubble';
 
-            const label = type === 'start' ? '📍 Current Location' : '🎯 Destination';
-            let html = `<strong>${label}:</strong><div class="building-list">`;
+            const label = type === 'start' ? 'Where are you right now?' : 'Where do you need to go?';
+            let html = `<strong>${label}</strong><div class="building-list">`;
 
             buildings.forEach(building => {
                 html += `<button class="building-btn" onclick="selectBuilding('${building}')">${building}</button>`;
@@ -918,9 +927,9 @@
 
         // Initialize chat
         window.addEventListener('load', () => {
-            addMessage('🎓 Welcome to NUST Navigator!');
+            addMessage('Hey! 👋 Welcome to NUST!');
             setTimeout(() => {
-                addMessage('Your intelligent guide to campus exploration. Discover optimal routes between buildings powered by advanced algorithms. Let\'s get you where you need to go! 🚀');
+                addMessage('I\'m your campus buddy. Need help getting around? I know all the shortcuts and can point you in the right direction. Let\'s find your next spot!');
             }, 400);
             setTimeout(() => {
                 showBuildingSelection('start');
