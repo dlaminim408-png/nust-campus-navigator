@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUST Campus Navigator - Smart Campus Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #003366;
+            --primary-light: #004d99;
+            --primary-dark: #001a33;
+            --accent: #00a8e8;
+            --accent-light: #00d4ff;
+            --success: #06d6a0;
+            --warning: #ffa600;
+            --error: #ff6b6b;
+            --bg-light: #f8fafb;
+            --bg-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 168, 232, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(6, 214, 160, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, -30px); }
+        }
+
+        .container-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 700px;
+            height: 90vh;
+            max-height: 850px;
+        }
+
+        .chatbot-container {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-white);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(40%, -40%);
+        }
+
+        .header-logo {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-content h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .header-content p {
+            font-size: 13px;
+            opacity: 0.95;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .header-content .subtitle {
+            font-size: 12px;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        /* Messages Container */
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-light);
+            scroll-behavior: smooth;
+        }
+
+        .messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 51, 102, 0.3);
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 51, 102, 0.6);
+        }
+
+        .message {
+            display: flex;
+            animation: messageSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 14px;
+            box-shadow: var(--shadow-sm);
+            animation: bubbleIn 0.3s ease;
+        }
+
+        @keyframes bubbleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .bot .message-bubble {
+            background: var(--bg-white);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .user .message-bubble {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 8px 16px rgba(0, 51, 102, 0.25);
+        }
+
+        /* Building List */
+        .building-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .building-btn {
+            padding: 10px 12px;
+            background: var(--bg-light);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .building-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+
+        .building-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .building-btn:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 51, 102, 0.2);
+        }
+
+        .building-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Info Cards */
+        .route-info {
+            background: linear-gradient(135deg, rgba(6, 214, 160, 0.1) 0%, rgba(0, 168, 232, 0.1) 100%);
+            border-left: 4px solid var(--success);
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            animation: slideInLeft 0.4s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .route-info strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .route-info br {
+            margin: 4px 0;
+        }
+
+        .error-info {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 166, 0, 0.1) 100%);
+            border-left: 4px solid var(--error);
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            animation: slideInLeft 0.4s ease;
+        }
+
+        .error-info strong {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            background: var(--bg-white);
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 24px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            padding: 0 4px;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        input[type="text"]::placeholder {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .send-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+        }
+
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 51, 102, 0.4);
+        }
+
+        .send-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading States */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 8px 12px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-light);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.5; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .chatbot-container {
+                border-radius: 20px 20px 0 0;
+                max-height: 100vh;
+            }
+
+            .container-wrapper {
+                max-width: 100%;
+                height: 100vh;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+
+            .building-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                padding: 16px;
+            }
+
+            .header-logo {
+                width: 56px;
+                height: 56px;
+                font-size: 32px;
+            }
+
+            .header-content h1 {
+                font-size: 20px;
+            }
+
+            .messages {
+                padding: 16px;
+            }
+        }
+
+        /* Text styling in bubbles */
+        .message-bubble strong {
+            font-weight: 600;
+            color: inherit;
+        }
+
+        .message-bubble em {
+            font-style: italic;
+        }
+
+        .message-bubble a {
+            color: inherit;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Tag styles */
+        .tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tag.success {
+            background: var(--success);
+        }
+
+        .tag.warning {
+            background: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-wrapper">
+        <div class="chatbot-container">
+            <div class="header">
+                <div class="header-logo">🗺️</div>
+                <div class="header-content">
+                    <h1>NUST Navigator</h1>
+                    <p>Smart Campus Guide</p>
+                    <p class="subtitle">Explore campus seamlessly</p>
+                </div>
+            </div>
+
+            <div class="messages" id="messages"></div>
+
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="userInput" 
+                        placeholder="Type a building name or ask for directions..."
+                        autocomplete="off"
+                    >
+                </div>
+                <button class="send-btn" onclick="sendMessage()">
+                    <span>Send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Campus map data
+        const campusMap = {
+            'Gate': { 'AdminBlock': 5, 'Library': 7 },
+            'AdminBlock': { 'Gate': 5, 'ChemicalBuilding': 10, 'Library': 3 },
+            'Library': { 'Gate': 7, 'AdminBlock': 3, 'AppliedScience': 8 },
+            'ChemicalBuilding': { 'AdminBlock': 10, 'AppliedScience': 2 },
+            'AppliedScience': { 'Library': 8, 'ChemicalBuilding': 2 }
+        };
+
+        const buildings = Object.keys(campusMap).sort();
+
+        // Dijkstra's algorithm using priority queue simulation
+        function findCampusRoute(graph, start, end) {
+            const queue = [[0, start, []]];
+            const visited = new Set();
+
+            while (queue.length > 0) {
+                // Simple priority queue - find minimum cost
+                let minIdx = 0;
+                for (let i = 1; i < queue.length; i++) {
+                    if (queue[i][0] < queue[minIdx][0]) {
+                        minIdx = i;
+                    }
+                }
+
+                const [cost, node, path] = queue.splice(minIdx, 1)[0];
+
+                if (!visited.has(node)) {
+                    visited.add(node);
+                    const newPath = [...path, node];
+
+                    if (node === end) {
+                        return [cost, newPath];
+                    }
+
+                    const neighbors = graph[node] || {};
+                    for (const [neighbor, weight] of Object.entries(neighbors)) {
+                        if (!visited.has(neighbor)) {
+                            queue.push([cost + weight, neighbor, newPath]);
+                        }
+                    }
+                }
+            }
+
+            return [Infinity, []];
+        }
+
+        // Chatbot state
+        let conversationState = 'initial';
+        let startBuilding = null;
+        let endBuilding = null;
+
+        // Message handling
+        function addMessage(text, isUser = false, isHtml = false) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+
+            if (isHtml) {
+                bubbleDiv.innerHTML = text;
+            } else {
+                bubbleDiv.textContent = text;
+            }
+
+            messageDiv.appendChild(bubbleDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const userText = input.value.trim();
+
+            if (!userText) return;
+
+            addMessage(userText, true);
+            input.value = '';
+
+            addLoadingMessage();
+            setTimeout(() => {
+                removeLoadingMessage();
+                processInput(userText.toLowerCase());
+            }, 600);
+        }
+
+        function addLoadingMessage() {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.id = 'loading-message';
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+
+            bubbleDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+
+            messageDiv.appendChild(bubbleDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function removeLoadingMessage() {
+            const loadingMsg = document.getElementById('loading-message');
+            if (loadingMsg) {
+                loadingMsg.remove();
+            }
+        }
+
+        function processInput(userInput) {
+            if (conversationState === 'initial') {
+                handleInitial(userInput);
+            } else if (conversationState === 'waiting_start') {
+                handleStartSelection(userInput);
+            } else if (conversationState === 'waiting_end') {
+                handleEndSelection(userInput);
+            } else if (conversationState === 'showing_route') {
+                handleRouteMenu(userInput);
+            }
+        }
+
+        function handleInitial(input) {
+            if (input.includes('help') || input.includes('hi') || input.includes('hello') || input.includes('route') || input.includes('navigate')) {
+                addMessage('👋 Welcome to NUST Navigator!');
+                setTimeout(() => {
+                    addMessage('I\'m your intelligent campus guide, powered by cutting-edge pathfinding algorithms. I\'ll help you discover the most efficient routes between any campus buildings. Let\'s explore!');
+                }, 400);
+                setTimeout(() => {
+                    showBuildingSelection('start');
+                }, 900);
+                conversationState = 'waiting_start';
+            } else {
+                addMessage('Hello! 👋 Try "navigate", "help", or just ask me for directions to explore the campus!');
+            }
+        }
+
+        function handleStartSelection(input) {
+            const building = findBuildingMatch(input);
+            if (building) {
+                startBuilding = building;
+                addMessage(`✅ Starting point: <strong>${building}</strong> 📍`);
+                setTimeout(() => {
+                    addMessage('Great! Now, where are you headed? Choose your destination:');
+                }, 400);
+                setTimeout(() => {
+                    showBuildingSelection('end');
+                }, 900);
+                conversationState = 'waiting_end';
+            } else {
+                addMessage('❌ Hmm, I didn\'t catch that building. Pick from the available options:');
+                setTimeout(() => {
+                    showBuildingSelection('start');
+                }, 400);
+            }
+        }
+
+        function handleEndSelection(input) {
+            const building = findBuildingMatch(input);
+            if (building) {
+                endBuilding = building;
+
+                if (startBuilding === endBuilding) {
+                    addMessage('🎯 You\'re already there! Enjoy your time at campus. 😄');
+                    setTimeout(() => {
+                        addMessage('Need to go somewhere else? Select a new starting point:');
+                    }, 400);
+                    setTimeout(() => {
+                        showBuildingSelection('start');
+                    }, 900);
+                    conversationState = 'waiting_start';
+                    startBuilding = null;
+                    endBuilding = null;
+                } else {
+                    addLoadingMessage();
+                    setTimeout(() => {
+                        removeLoadingMessage();
+                        calculateAndShowRoute();
+                    }, 1000);
+                }
+            } else {
+                addMessage('❌ Building not found. Please select from the list:');
+                setTimeout(() => {
+                    showBuildingSelection('end');
+                }, 400);
+            }
+        }
+
+        function handleRouteMenu(input) {
+            if (input.includes('new') || input.includes('another') || input.includes('again') || input.includes('different')) {
+                conversationState = 'initial';
+                startBuilding = null;
+                endBuilding = null;
+                addMessage('🛣️ Ready for another adventure! Where would you like to start?');
+                setTimeout(() => {
+                    showBuildingSelection('start');
+                }, 400);
+                conversationState = 'waiting_start';
+            } else {
+                const building = findBuildingMatch(input);
+                if (building) {
+                    startBuilding = building;
+                    addMessage(`✅ New starting point: <strong>${building}</strong> 📍`);
+                    setTimeout(() => {
+                        addMessage('Where would you like to go?');
+                    }, 400);
+                    setTimeout(() => {
+                        showBuildingSelection('end');
+                    }, 900);
+                    conversationState = 'waiting_end';
+                } else {
+                    addMessage('Would you like to navigate elsewhere? Select a starting location:');
+                    setTimeout(() => {
+                        showBuildingSelection('start');
+                    }, 400);
+                }
+            }
+        }
+
+        function calculateAndShowRoute() {
+            const [distance, route] = findCampusRoute(campusMap, startBuilding, endBuilding);
+
+            if (route.length > 0) {
+                const routeHtml = `
+                    <div class="route-info">
+                        <strong>✅ Perfect Route Found!</strong><br>
+                        <strong>📍 From:</strong> ${startBuilding} <span class="tag">START</span><br>
+                        <strong>🎯 To:</strong> ${endBuilding} <span class="tag success">END</span><br>
+                        <strong>📏 Distance:</strong> ${distance}m | <strong>🏢 Stops:</strong> ${route.length}<br>
+                        <strong>🛣️ Path:</strong> ${route.join(' → ')}<br>
+                        <small style="opacity: 0.8;">Optimized route calculated using Dijkstra's algorithm</small>
+                    </div>
+                `;
+                addMessage(routeHtml, false, true);
+
+                setTimeout(() => {
+                    addMessage('💡 Pro Tip: Routes are calculated for shortest distance. Use nearby entrances for faster access!');
+                }, 500);
+                setTimeout(() => {
+                    addMessage('Ready for another journey? Select your new starting point:');
+                }, 1000);
+                setTimeout(() => {
+                    showBuildingSelection('start');
+                }, 1500);
+
+                conversationState = 'showing_route';
+            } else {
+                const errorHtml = `
+                    <div class="error-info">
+                        <strong>❌ Route Unavailable</strong><br>
+                        Unfortunately, these buildings aren't connected at the moment.
+                    </div>
+                `;
+                addMessage(errorHtml, false, true);
+                setTimeout(() => {
+                    addMessage('Let\'s try different buildings:');
+                }, 400);
+                setTimeout(() => {
+                    showBuildingSelection('start');
+                }, 900);
+
+                conversationState = 'waiting_start';
+            }
+
+            startBuilding = null;
+            endBuilding = null;
+        }
+
+        function showBuildingSelection(type) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+
+            const label = type === 'start' ? '📍 Current Location' : '🎯 Destination';
+            let html = `<strong>${label}:</strong><div class="building-list">`;
+
+            buildings.forEach(building => {
+                html += `<button class="building-btn" onclick="selectBuilding('${building}')">${building}</button>`;
+            });
+
+            html += '</div>';
+            bubbleDiv.innerHTML = html;
+            messageDiv.appendChild(bubbleDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function selectBuilding(building) {
+            const input = document.getElementById('userInput');
+            input.value = building;
+            sendMessage();
+        }
+
+        function findBuildingMatch(input) {
+            const normalized = input.toLowerCase().trim();
+
+            for (const building of buildings) {
+                if (normalized.includes(building.toLowerCase()) || building.toLowerCase().includes(normalized)) {
+                    return building;
+                }
+            }
+
+            const number = parseInt(input);
+            if (!isNaN(number) && number >= 1 && number <= buildings.length) {
+                return buildings[number - 1];
+            }
+
+            return null;
+        }
+
+        // Keyboard support
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize chat
+        window.addEventListener('load', () => {
+            addMessage('🎓 Welcome to NUST Navigator!');
+            setTimeout(() => {
+                addMessage('Your intelligent guide to campus exploration. Discover optimal routes between buildings powered by advanced algorithms. Let\'s get you where you need to go! 🚀');
+            }, 400);
+            setTimeout(() => {
+                showBuildingSelection('start');
+            }, 1000);
+            conversationState = 'waiting_start';
+        });
+
+        // Focus input on load
+        setTimeout(() => {
+            document.getElementById('userInput').focus();
+        }, 1500);
+    </script>
+</body>
+</html>
