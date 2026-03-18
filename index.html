@@ -901,16 +901,21 @@
         function handleMoreDirectionsQuestion(input) {
             const response = input.toLowerCase().trim();
             if (response.includes('yes') || response.includes('y')) {
-                addMessage(`No problem, ${userName}! Where are you now?`);
+                addMessage(`Great! Let's find another route.`);
+                startBuilding = null;
+                endBuilding = null;
+                setTimeout(() => {
+                    addMessage('Where are you now?');
+                }, 400);
                 setTimeout(() => {
                     showBuildingSelection('start');
-                }, 400);
+                }, 900);
                 conversationState = 'waiting_start';
             } else if (response.includes('no') || response.includes('n')) {
-                addMessage(`Great! See you around campus, ${userName}! 👋`);
+                addMessage(`Thank you for using NUST Campus Navigator, ${userName}! Have a great time on campus! 🎓`);
                 conversationState = 'asking_name';
             } else {
-                addMessage('Yes or no?');
+                addMessage('Please answer with "Yes" or "No"');
                 setTimeout(() => {
                     showYesNoSelection();
                 }, 400);
@@ -1150,7 +1155,16 @@
                     addMessage(`${userName}, your route is ready. Safe travels! 🎯`);
                 }, dirDelay + 1600);
 
-                conversationState = 'waiting_start';
+                // Ask if user needs more directions
+                setTimeout(() => {
+                    addMessage(`Do you need directions to another location?`);
+                }, dirDelay + 2100);
+
+                setTimeout(() => {
+                    showYesNoSelection();
+                }, dirDelay + 2600);
+
+                conversationState = 'asking_more_directions';
             } else {
                 addMessage(`No route available between ${startBuilding} and ${endBuilding}. Try a different destination.`);
                 setTimeout(() => {
@@ -1175,9 +1189,6 @@
             if (desc) {
                 const descHtml = `
                     <div class="building-info">
-                        <div class="building-image-container">
-                            <img src="https://via.placeholder.com/300x200" alt="${buildingName}" class="building-image" onerror="this.src='https://via.placeholder.com/300x200/333333/ffffff?text=${buildingName}'">
-                        </div>
                         <div class="building-details">
                             <strong class="building-title">📍 ${buildingName}</strong>
                             <div class="info-row">
