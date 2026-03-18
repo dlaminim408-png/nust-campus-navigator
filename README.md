@@ -7,11 +7,13 @@ An intelligent, beautifully designed chatbot for navigating the NUST campus usin
 ### ✨ Features
 
 - **Intelligent Route Finding** - Dijkstra's algorithm for optimal path calculation
-- **Beautiful UI/UX** - Modern, responsive design with smooth animations
+- **Step-by-Step Directions** - Real-time, descriptive guidance with approximate distances for each leg
+- **Personalized Experience** - Greets users by name and tailors responses
+- **Beautiful UI/UX** - Modern, responsive design with smooth animations and NUST branding
 - **Real-time Interactions** - Instant route calculations and seamless conversation
 - **Mobile-Optimized** - Works perfectly on desktop, tablet, and mobile devices
 - **Smart Building Selection** - Easy building selection with visual feedback
-- **Professional Design** - NUST-branded color scheme and typography
+- **Professional Tone** - Formal, polite communication style that sounds naturally human
 
 ### 🚀 Live Demo
 
