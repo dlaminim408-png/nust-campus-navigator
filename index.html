@@ -958,11 +958,24 @@
                     }, 800);
                     conversationState = 'asking_more_directions';
                 } else {
+                    // Show starting building info
+                    setTimeout(() => {
+                        addMessage(`Starting from: ${startBuilding}`);
+                        showBuildingDescription(startBuilding);
+                    }, 300);
+
+                    // Show destination building info
+                    setTimeout(() => {
+                        addMessage(`Destination: ${endBuilding}`);
+                        showBuildingDescription(endBuilding);
+                    }, 1200);
+
+                    // Calculate and show route
                     addLoadingMessage();
                     setTimeout(() => {
                         removeLoadingMessage();
                         calculateAndShowRoute();
-                    }, 800);
+                    }, 2000);
                 }
             } else {
                 addMessage(`I didn't catch that. Pick a building:`);
@@ -1095,9 +1108,11 @@
                     showBuildingDescription(endBuilding);
                 }, dirDelay + 400);
 
-                // Show AI-style summary with algorithm details
+                // Show summary with algorithm details
                 setTimeout(() => {
                     const walkTime = calculateWalkTime(distance);
+                    const startDesc = buildingDescriptions[route[0]];
+                    const endDesc = buildingDescriptions[route[route.length - 1]];
                     
                     const summaryHtml = `
                         <div class="route-summary">
@@ -1105,11 +1120,11 @@
                             <div class="summary-body">
                                 <div class="summary-line">
                                     <span class="from">From:</span>
-                                    <span class="value">${startBuilding}</span>
+                                    <span class="value">${route[0]} (${startDesc.location})</span>
                                 </div>
                                 <div class="summary-line">
                                     <span class="to">To:</span>
-                                    <span class="value">${endBuilding}</span>
+                                    <span class="value">${route[route.length - 1]} (${endDesc.location})</span>
                                 </div>
                                 <div class="summary-divider"></div>
                                 <div class="summary-line">
@@ -1245,7 +1260,7 @@
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'message-bubble';
 
-            const label = type === 'start' ? 'Where are you right now?' : 'Where do you need to go?';
+            const label = type === 'start' ? 'Select your starting position' : 'Where do you need to go?';
             let html = `<strong>${label}</strong><div class="building-list">`;
 
             buildings.forEach(building => {
