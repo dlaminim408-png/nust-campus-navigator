@@ -13,22 +13,23 @@
         }
 
         :root {
-            --primary: #003366;
-            --primary-light: #004d99;
-            --primary-dark: #001a33;
-            --accent: #00a8e8;
-            --accent-light: #00d4ff;
-            --success: #06d6a0;
-            --warning: #ffa600;
-            --error: #ff6b6b;
-            --bg-light: #f8fafb;
+            --primary: #001a4d;
+            --primary-light: #003d99;
+            --primary-dark: #000d26;
+            --accent: #00b4d8;
+            --accent-light: #00d9ff;
+            --success: #00d084;
+            --warning: #ff9500;
+            --error: #ff3333;
+            --bg-light: #f0f4f8;
             --bg-white: #ffffff;
-            --text-dark: #1a1a1a;
-            --text-light: #6b7280;
-            --border-color: #e5e7eb;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.12);
-            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --text-dark: #0a0e27;
+            --text-light: #5a6c7d;
+            --border-color: #d4dce6;
+            --gold: #ffd60a;
+            --shadow-sm: 0 2px 8px rgba(0, 26, 77, 0.08);
+            --shadow-md: 0 8px 20px rgba(0, 26, 77, 0.12);
+            --shadow-lg: 0 16px 40px rgba(0, 26, 77, 0.16);
         }
 
         html, body {
@@ -38,7 +39,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #0066cc 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -56,8 +57,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at 20% 50%, rgba(0, 168, 232, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(6, 214, 160, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 50%, rgba(0, 180, 216, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 208, 132, 0.1) 0%, transparent 50%);
             animation: float 20s ease-in-out infinite;
             pointer-events: none;
         }
@@ -81,12 +82,12 @@
             height: 100%;
             background: var(--bg-white);
             border-radius: 24px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 20px 60px rgba(0, 26, 77, 0.2);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             animation: slideUp 0.6s ease;
         }
 
@@ -105,12 +106,13 @@
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            padding: 24px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
             gap: 16px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 26, 77, 0.15);
         }
 
         .header::after {
@@ -120,31 +122,26 @@
             right: 0;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 214, 10, 0.1) 0%, transparent 70%);
             border-radius: 50%;
             transform: translate(40%, -40%);
         }
 
         .header-logo {
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            padding: 8px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: pulse 2s ease-in-out infinite;
+            animation: pulse 2.5s ease-in-out infinite;
             position: relative;
             z-index: 1;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .header-content {
@@ -156,23 +153,17 @@
         }
 
         .header-content h1 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.5px;
             margin: 0;
         }
 
         .header-content p {
-            font-size: 13px;
-            opacity: 0.95;
+            font-size: 12px;
+            opacity: 0.9;
             margin: 0;
             font-weight: 500;
-        }
-
-        .header-content .subtitle {
-            font-size: 12px;
-            opacity: 0.85;
-            font-weight: 400;
         }
 
         /* Messages Container */
@@ -232,7 +223,7 @@
         .message-bubble {
             max-width: 75%;
             padding: 12px 16px;
-            border-radius: 16px;
+            border-radius: 18px;
             word-wrap: break-word;
             line-height: 1.5;
             font-size: 14px;
@@ -252,17 +243,17 @@
         }
 
         .bot .message-bubble {
-            background: var(--bg-white);
+            background: #f9fbfd;
             color: var(--text-dark);
-            border: 1px solid var(--border-color);
+            border: 1px solid #e3f2fd;
             border-bottom-left-radius: 4px;
         }
 
         .user .message-bubble {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #0052cc 100%);
             color: white;
             border-bottom-right-radius: 4px;
-            box-shadow: 0 8px 16px rgba(0, 51, 102, 0.25);
+            box-shadow: 0 8px 16px rgba(0, 26, 77, 0.25);
         }
 
         /* Building List */
@@ -274,17 +265,18 @@
         }
 
         .building-btn {
-            padding: 10px 12px;
-            background: var(--bg-light);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--primary);
+            color: white;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 26, 77, 0.2);
         }
 
         .building-btn::before {
@@ -294,7 +286,7 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: var(--primary);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
@@ -308,23 +300,25 @@
 
         .building-btn:hover {
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 51, 102, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 26, 77, 0.3);
+            background: linear-gradient(135deg, #0052cc 0%, var(--accent-light) 100%);
         }
 
         .building-btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
         }
 
         /* Info Cards */
         .route-info {
-            background: linear-gradient(135deg, rgba(6, 214, 160, 0.1) 0%, rgba(0, 168, 232, 0.1) 100%);
-            border-left: 4px solid var(--success);
-            padding: 14px 16px;
-            border-radius: 12px;
-            margin: 8px 0;
-            border: 1px solid rgba(6, 214, 160, 0.3);
+            background: linear-gradient(135deg, rgba(0, 208, 132, 0.08) 0%, rgba(0, 180, 216, 0.08) 100%);
+            border-left: 5px solid var(--success);
+            padding: 16px;
+            border-radius: 14px;
+            margin: 12px 0;
+            border: 1px solid rgba(0, 208, 132, 0.3);
             animation: slideInLeft 0.4s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         @keyframes slideInLeft {
@@ -340,11 +334,72 @@
 
         .route-info strong {
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .route-info br {
             margin: 4px 0;
+        }
+
+        .building-info {
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.06) 0%, rgba(0, 217, 255, 0.06) 100%);
+            border-left: 5px solid var(--accent);
+            padding: 16px;
+            border-radius: 16px;
+            margin: 12px 0;
+            border: 1px solid rgba(0, 180, 216, 0.25);
+            animation: slideInLeft 0.4s ease;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .building-info:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .building-image-container {
+            margin: 0 0 14px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .building-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .building-details {
+            padding: 0;
+        }
+
+        .building-title {
+            color: var(--primary);
+            font-weight: 700;
+            display: block;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            margin: 8px 0;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .info-row strong {
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-block;
+            min-width: 140px;
         }
 
         .error-info {
@@ -416,7 +471,7 @@
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 26, 77, 0.3);
         }
 
         .send-btn::before {
@@ -434,6 +489,9 @@
 
         .send-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 26, 77, 0.4);
+            background: linear-gradient(135deg, #0052cc 0%, var(--accent-light) 100%);
+        }
             box-shadow: 0 8px 20px rgba(0, 51, 102, 0.4);
         }
 
@@ -562,8 +620,8 @@
     <div class="container-wrapper">
         <div class="chatbot-container">
             <div class="header">
-                <div class="header-logo">
-                    <img src="data:image/svg+xml,%3Csvg viewBox='0 0 200 220' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='100' cy='60' r='45' fill='%231e90ff'/%3E%3Cpolygon points='100,25 130,55 70,55' fill='%23ffd700'/%3E%3Ccircle cx='100' cy='60' r='8' fill='%23fff'/%3E%3Crect x='95' y='70' width='10' height='25' fill='%23000'/%3E%3Crect x='75' y='50' width='50' height='8' fill='%23ffd700'/%3E%3Crect x='70' y='85' width='60' height='15' fill='%231e90ff' rx='3'/%3E%3Crect x='65' y='105' width='70' height='80' fill='%23f5f5f5' rx='5'/%3E%3Ctext x='100' y='155' font-size='14' font-weight='bold' text-anchor='middle' fill='%23000'%3ENUST%3C/text%3E%3C/svg%3E" alt="NUST Logo" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+                <div class="header-logo" title="National University of Science and Technology - NUST Zimbabwe, Bulawayo Campus">
+                    <img src="logo.png" alt="NUST Logo - National University of Science and Technology Zimbabwe" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
                 </div>
                 <div class="header-content">
                     <h1>NUST Campus Navigator</h1>
@@ -590,13 +648,47 @@
     </div>
 
     <script>
-        // Campus map data
+        // NUST Zimbabwe Campus - Real Campus Data
         const campusMap = {
-            'Gate': { 'AdminBlock': 5, 'Library': 7 },
-            'AdminBlock': { 'Gate': 5, 'ChemicalBuilding': 10, 'Library': 3 },
-            'Library': { 'Gate': 7, 'AdminBlock': 3, 'AppliedScience': 8 },
-            'ChemicalBuilding': { 'AdminBlock': 10, 'AppliedScience': 2 },
-            'AppliedScience': { 'Library': 8, 'ChemicalBuilding': 2 }
+            'Main Gate': { 'AdminBlock': 150, 'TechnovationCentre': 280, 'AppliedScience': 320, 'SportsCentre': 420 },
+            'AdminBlock': { 'Main Gate': 150, 'TechnovationCentre': 180, 'AppliedScience': 210, 'SportsCentre': 350 },
+            'TechnovationCentre': { 'Main Gate': 280, 'AdminBlock': 180, 'AppliedScience': 90, 'SportsCentre': 200 },
+            'AppliedScience': { 'Main Gate': 320, 'AdminBlock': 210, 'TechnovationCentre': 90, 'SportsCentre': 150 },
+            'SportsCentre': { 'Main Gate': 420, 'AdminBlock': 350, 'TechnovationCentre': 200, 'AppliedScience': 150 }
+        };
+
+        // Building descriptions with real features
+        const buildingDescriptions = {
+            'Main Gate': {
+                location: 'Southern entrance',
+                features: 'The main entrance checkpoint with security booth, white painted gates, and NUST signage. This is where you enter the campus.',
+                architecture: 'Modern white structure with blue and gold security barriers',
+                visual: '️Look for large white metal gates with "NUST" written in bold letters'
+            },
+            'AdminBlock': {
+                location: 'Northern side of campus',
+                features: 'The central administrative building where students go for registration, student services, and official documents. A prominent white building that stands out.',
+                architecture: 'Multi-story white building with glass windows and contemporary office design',
+                visual: 'You'll see a large white building with many windows - it\'s in the center, hard to miss'
+            },
+            'TechnovationCentre': {
+                location: 'Eastern side of campus',
+                features: 'Professor Makhurane\'s state-of-the-art innovation facility. This is the newest building on campus with modern labs, computer centers, and research facilities.',
+                architecture: 'Cutting-edge modern architecture with contemporary design and natural lighting',
+                visual: 'Look for a sleek modern building with lots of glass - it\'s the most modern structure on campus'
+            },
+            'AppliedScience': {
+                location: 'Eastern-Central area of campus',
+                features: 'Science and research laboratories with equipment for practical work. This is where science students conduct experiments and practical sessions.',
+                architecture: 'Purpose-built science facility with solid modern construction',
+                visual: 'A dedicated science block with visible lab equipment and technical infrastructure'
+            },
+            'SportsCentre': {
+                location: 'Western side of campus',
+                features: 'Sports complex with gymnasium, indoor courts, outdoor fields, and recreational facilities. Where students train and play sports.',
+                architecture: 'Large modern sports complex with covered facilities and open-air courts',
+                visual: 'Look for a large building with sports equipment visible, courts, and fields around it'
+            }
         };
 
         const buildings = Object.keys(campusMap).sort();
@@ -642,6 +734,9 @@
         let userName = '';
         let startBuilding = null;
         let endBuilding = null;
+        let displayMode = 'both'; // 'directions_only' or 'both'
+        let lastDistance = 0;
+        let lastRoute = [];
 
         // Message handling
         function addMessage(text, isUser = false, isHtml = false) {
@@ -711,8 +806,10 @@
         function processInput(userInput) {
             if (conversationState === 'asking_name') {
                 handleNameInput(userInput);
-            } else if (conversationState === 'initial') {
-                handleInitial(userInput);
+            } else if (conversationState === 'asking_display_mode') {
+                handleDisplayModeSelection(userInput);
+            } else if (conversationState === 'asking_more_directions') {
+                handleMoreDirectionsQuestion(userInput);
             } else if (conversationState === 'waiting_start') {
                 handleStartSelection(userInput);
             } else if (conversationState === 'waiting_end') {
@@ -722,47 +819,65 @@
             }
         }
 
-        function handleInitial(input) {
-            if (input.includes('help') || input.includes('hi') || input.includes('hello') || input.includes('route') || input.includes('navigate') || input.includes('start')) {
-                addMessage('Certainly. Let me help you navigate the campus.');
-                setTimeout(() => {
-                    showBuildingSelection('start');
-                }, 600);
-                conversationState = 'waiting_start';
-            } else {
-                addMessage('I can help you find the quickest route between any campus buildings. Would you like to get started?');
-            }
-        }
-
         function handleNameInput(input) {
             const name = input.trim().split(/\s+/)[0];
             if (name.length > 0) {
                 userName = name.charAt(0).toUpperCase() + name.slice(1);
-                addMessage(`Thank you, ${userName}. I'm here to help you navigate the NUST campus.`);
+                addMessage(`Hey ${userName}! 👋 Let me help you navigate NUST.`);
                 setTimeout(() => {
-                    addMessage('Where are you located currently?');
-                }, 500);
+                    addMessage(`The logo at the top shows the National University of Science and Technology symbol - that's us here in Bulawayo! 🏫`);
+                }, 400);
+                setTimeout(() => {
+                    addMessage('Where are you right now?');
+                }, 1000);
                 setTimeout(() => {
                     showBuildingSelection('start');
-                }, 1000);
+                }, 1400);
                 conversationState = 'waiting_start';
+            } else {
+                addMessage('What\'s your name?');
             }
+        }
+
+        function handleMoreDirectionsQuestion(input) {
+            const response = input.toLowerCase().trim();
+            if (response.includes('yes') || response.includes('y')) {
+                addMessage(`No problem, ${userName}! Where are you now?`);
+                setTimeout(() => {
+                    showBuildingSelection('start');
+                }, 400);
+                conversationState = 'waiting_start';
+            } else if (response.includes('no') || response.includes('n')) {
+                addMessage(`Great! See you around campus, ${userName}! 👋`);
+                conversationState = 'asking_name';
+            } else {
+                addMessage('Yes or no?');
+                setTimeout(() => {
+                    showYesNoSelection();
+                }, 400);
+            }
+        }
+
+        function handleDisplayModeSelection(input) {
+            // Skip this - just show the route directly
+            calculateAndShowRoute();
         }
 
         function handleStartSelection(input) {
             const building = findBuildingMatch(input);
             if (building) {
                 startBuilding = building;
-                addMessage(`Got it. You're at the ${building}.`);
+                addMessage(`You're at ${building}. 📍`);
+                
                 setTimeout(() => {
-                    addMessage('Where would you like to go?');
+                    addMessage(`Where to?`);
                 }, 400);
                 setTimeout(() => {
                     showBuildingSelection('end');
-                }, 900);
+                }, 800);
                 conversationState = 'waiting_end';
             } else {
-                addMessage('I didn\'t recognize that. Please select your current location from the list:');
+                addMessage(`Pick a building:`);
                 setTimeout(() => {
                     showBuildingSelection('start');
                 }, 400);
@@ -775,25 +890,23 @@
                 endBuilding = building;
 
                 if (startBuilding === endBuilding) {
-                    addMessage('You\'re already at that location.');
+                    addMessage(`You're already at ${building}, ${userName}! 😊`);
                     setTimeout(() => {
-                        addMessage('Would you like directions to a different place?');
+                        addMessage(`Need directions anywhere else?`);
                     }, 400);
                     setTimeout(() => {
-                        showBuildingSelection('start');
-                    }, 900);
-                    conversationState = 'waiting_start';
-                    startBuilding = null;
-                    endBuilding = null;
+                        showYesNoSelection();
+                    }, 800);
+                    conversationState = 'asking_more_directions';
                 } else {
                     addLoadingMessage();
                     setTimeout(() => {
                         removeLoadingMessage();
                         calculateAndShowRoute();
-                    }, 1000);
+                    }, 800);
                 }
             } else {
-                addMessage('I didn\'t recognize that building. Please select from the list:');
+                addMessage(`I didn't catch that. Pick a building:`);
                 setTimeout(() => {
                     showBuildingSelection('end');
                 }, 400);
@@ -805,7 +918,7 @@
                 conversationState = 'initial';
                 startBuilding = null;
                 endBuilding = null;
-                addMessage('No problem! Where are you at now?');
+                addMessage(`Where are you now?`);
                 setTimeout(() => {
                     showBuildingSelection('start');
                 }, 400);
@@ -814,16 +927,16 @@
                 const building = findBuildingMatch(input);
                 if (building) {
                     startBuilding = building;
-                    addMessage(`Got it! You're at the ${building}. 📍`);
+                    addMessage(`You're at ${building}. 📍`);
                     setTimeout(() => {
-                        addMessage('Where are you headed?');
+                        addMessage('Where to?');
                     }, 400);
                     setTimeout(() => {
                         showBuildingSelection('end');
-                    }, 900);
+                    }, 800);
                     conversationState = 'waiting_end';
                 } else {
-                    addMessage('Just let me know where you\'re starting from:');
+                    addMessage(`Pick a building:`);
                     setTimeout(() => {
                         showBuildingSelection('start');
                     }, 400);
@@ -833,71 +946,156 @@
 
         function calculateAndShowRoute() {
             const [distance, route] = findCampusRoute(campusMap, startBuilding, endBuilding);
+            lastDistance = distance;
+            lastRoute = route;
 
             if (route.length > 0) {
                 addMessage(`Here's your route from ${startBuilding} to ${endBuilding}:`);
 
+                // Show the starting building description
+                setTimeout(() => {
+                    showBuildingDescription(startBuilding);
+                }, 600);
+
                 // Show step-by-step directions
-                let currentDistance = 0;
+                let stepDelay = 1400;
                 for (let i = 0; i < route.length - 1; i++) {
                     const from = route[i];
                     const to = route[i + 1];
-                    const edgeKey = from < to ? `${from}-${to}` : `${to}-${from}`;
-                    const stepDistance = campusMap[edgeKey] || 0;
-                    currentDistance += stepDistance;
+                    const stepDistance = campusMap[from][to] || 0;
 
                     const stepNum = i + 1;
-                    const directionMsg = `Step ${stepNum}: From the ${from}, head towards the ${to} (${stepDistance} meters). Total distance so far: ${currentDistance} meters.`;
+                    const directionMsg = `📍 Step ${stepNum}: Head to ${to} • ${stepDistance}m`;
 
                     setTimeout(() => {
                         addMessage(directionMsg);
-                    }, 600 + (i * 500));
+                    }, stepDelay);
+                    
+                    stepDelay += 400;
                 }
 
-                // Final summary
+                // Show destination building description
                 setTimeout(() => {
+                    showBuildingDescription(endBuilding);
+                }, stepDelay);
+
+                // Final summary with distance
+                setTimeout(() => {
+                    const walkTime = calculateWalkTime(distance);
                     const summaryHtml = `
                         <div class="route-info">
-                            <strong>Route Summary:</strong><br>
-                            <strong>Start:</strong> ${startBuilding} <span class="tag">START</span><br>
-                            <strong>End:</strong> ${endBuilding} <span class="tag success">FINISH</span><br>
-                            <strong>Total Distance:</strong> ${distance} meters<br>
-                            <strong>Path:</strong> ${route.join(' → ')}<br>
-                            <small style="opacity: 0.8;">You are now ready to navigate</small>
+                            <strong>✅ Total: ${distance}m • ${walkTime} walk</strong><br>
+                            <strong>📍</strong> ${startBuilding} → ${endBuilding}
                         </div>
                     `;
                     addMessage(summaryHtml, false, true);
-                }, 600 + ((route.length - 1) * 500));
+                }, stepDelay + 500);
 
                 setTimeout(() => {
-                    addMessage('I hope that was helpful. Would you like directions to another location?');
-                }, 1100 + ((route.length - 1) * 500));
+                    addMessage(`Need directions to somewhere else?`);
+                }, stepDelay + 1200);
 
                 setTimeout(() => {
-                    showBuildingSelection('start');
-                }, 1600 + ((route.length - 1) * 500));
+                    showYesNoSelection();
+                }, stepDelay + 1700);
 
-                conversationState = 'showing_route';
+                conversationState = 'asking_more_directions';
             } else {
-                const errorHtml = `
-                    <div class="error-info">
-                        <strong>I apologize.</strong><br>
-                        I don't currently have a route between those buildings in my campus map.
-                    </div>
-                `;
-                addMessage(errorHtml, false, true);
+                addMessage(`Sorry, I don't have a route between those buildings. Try another destination.`);
                 setTimeout(() => {
-                    addMessage('Please select a different destination:');
-                }, 400);
-                setTimeout(() => {
-                    showBuildingSelection('start');
-                }, 900);
-
-                conversationState = 'waiting_start';
+                    showBuildingSelection('end');
+                }, 800);
+                conversationState = 'waiting_end';
             }
 
             startBuilding = null;
             endBuilding = null;
+        }
+
+        function calculateWalkTime(distanceMeters) {
+            // Average walking speed: 1.5 meters per second = 5.4 km/h
+            const seconds = distanceMeters / 1.5;
+            const minutes = Math.ceil(seconds / 60);
+            return `${minutes} minutes`;
+        }
+
+        function showBuildingDescription(buildingName) {
+            const desc = buildingDescriptions[buildingName];
+            if (desc) {
+                const descHtml = `
+                    <div class="building-info">
+                        <div class="building-image-container">
+                            <img src="https://via.placeholder.com/300x200" alt="${buildingName}" class="building-image" onerror="this.src='https://via.placeholder.com/300x200/333333/ffffff?text=${buildingName}'">
+                        </div>
+                        <div class="building-details">
+                            <strong class="building-title">📍 ${buildingName}</strong>
+                            <div class="info-row">
+                                <strong>Location:</strong> ${desc.location} of campus
+                            </div>
+                            <div class="info-row">
+                                <strong>What to expect:</strong> ${desc.features}
+                            </div>
+                            <div class="info-row">
+                                <strong>What it looks like:</strong> ${desc.visual}
+                            </div>
+                            <div class="info-row">
+                                <strong>Architecture:</strong> ${desc.architecture}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                addMessage(descHtml, false, true);
+            }
+        }
+
+        function showYesNoSelection() {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+
+            let html = `<strong>Do you need directions?</strong><div class="building-list">`;
+            html += `<button class="building-btn" onclick="selectDirectionChoice('yes')">Yes, I need directions</button>`;
+            html += `<button class="building-btn" onclick="selectDirectionChoice('no')">No, I'm good</button>`;
+            html += '</div>';
+            
+            bubbleDiv.innerHTML = html;
+            messageDiv.appendChild(bubbleDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showDisplayModeSelection() {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+
+            let html = `<strong>How would you like to receive the directions?</strong><div class="building-list">`;
+            html += `<button class="building-btn" onclick="selectDisplayMode('both')">Both Distance & Directions</button>`;
+            html += `<button class="building-btn" onclick="selectDisplayMode('directions')">Directions Only</button>`;
+            html += '</div>';
+            
+            bubbleDiv.innerHTML = html;
+            messageDiv.appendChild(bubbleDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function selectDirectionChoice(choice) {
+            const input = document.getElementById('userInput');
+            input.value = choice;
+            sendMessage();
+        }
+
+        function selectDisplayMode(mode) {
+            const input = document.getElementById('userInput');
+            input.value = mode;
+            sendMessage();
         }
 
         function showBuildingSelection(type) {
@@ -954,14 +1152,12 @@
 
         // Initialize chat
         window.addEventListener('load', () => {
-            addMessage('Hey! 👋 Welcome to NUST!');
+            addMessage('Hi! 👋 I can help you navigate NUST campus.');
             setTimeout(() => {
-                addMessage('I\'m your campus buddy. Need help getting around? I know all the shortcuts and can point you in the right direction. Let\'s find your next spot!');
-            }, 400);
-            setTimeout(() => {
-                showBuildingSelection('start');
-            }, 1000);
-            conversationState = 'waiting_start';
+                addMessage('What\'s your name?');
+            }, 500);
+            
+            conversationState = 'asking_name';
         });
 
         // Focus input on load
