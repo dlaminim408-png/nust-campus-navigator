@@ -655,37 +655,42 @@
             'SportsCentre': { 'Main Gate': 420, 'AdminBlock': 350, 'TechnovationCentre': 200, 'AppliedScience': 150 }
         };
 
-        // Building descriptions with real features
+        // Building descriptions with detailed directions
         const buildingDescriptions = {
             'Main Gate': {
                 location: 'Southern entrance',
                 features: 'The main entrance checkpoint with security booth, white painted gates, and NUST signage. This is where you enter the campus.',
                 architecture: 'Modern white structure with blue and gold security barriers',
-                visual: 'Look for large white metal gates with NUST written in bold letters'
+                visual: 'Large white metal gates with NUST written in bold letters. Security booth on the right side. Parking area ahead.',
+                directions: 'This is the main entry point. Head north into campus from here.'
             },
             'AdminBlock': {
                 location: 'Northern side of campus',
                 features: 'The central administrative building where students go for registration, student services, and official documents. A prominent white building that stands out.',
                 architecture: 'Multi-story white building with glass windows and contemporary office design',
-                visual: 'You will see a large white building with many windows - it is in the center, hard to miss'
+                visual: 'A large white multi-story building with many windows in the center of campus. Blue trim around windows. Flag pole nearby.',
+                directions: 'Located directly north. Look for the tallest white building with multiple windows. Hard to miss in the center of campus.'
             },
             'TechnovationCentre': {
                 location: 'Eastern side of campus',
                 features: 'Professor Makhurane state-of-the-art innovation facility. This is the newest building on campus with modern labs, computer centers, and research facilities.',
                 architecture: 'Cutting-edge modern architecture with contemporary design and natural lighting',
-                visual: 'Look for a sleek modern building with lots of glass - it is the most modern structure on campus'
+                visual: 'A sleek, modern building with lots of glass panels and contemporary design. Newest looking structure on campus. Modern entrance with automatic doors.',
+                directions: 'Located on the eastern side. This is the most modern building. Look for the contemporary glass structure with blue accents.'
             },
             'AppliedScience': {
                 location: 'Eastern-Central area of campus',
                 features: 'Science and research laboratories with equipment for practical work. This is where science students conduct experiments and practical sessions.',
                 architecture: 'Purpose-built science facility with solid modern construction',
-                visual: 'A dedicated science block with visible lab equipment and technical infrastructure'
+                visual: 'A dedicated science block with visible lab equipment behind glass. Specialized ventilation systems on roof. Yellow safety markings.',
+                directions: 'Located in the eastern-central area. Built specifically for science - look for labs visible through windows and safety equipment.'
             },
             'SportsCentre': {
                 location: 'Western side of campus',
                 features: 'Sports complex with gymnasium, indoor courts, outdoor fields, and recreational facilities. Where students train and play sports.',
                 architecture: 'Large modern sports complex with covered facilities and open-air courts',
-                visual: 'Look for a large building with sports equipment visible, courts, and fields around it'
+                visual: 'A large sports facility with visible courts and playing fields. You will see outdoor sports equipment, basketball hoops, and open spaces for training.',
+                directions: 'Located on the western side. You will hear activity and see sports equipment. Look for large open playing areas and covered court structures.'
             }
         };
 
@@ -823,14 +828,11 @@
                 userName = name.charAt(0).toUpperCase() + name.slice(1);
                 addMessage(`Hey ${userName}! 👋 Let me help you navigate NUST.`);
                 setTimeout(() => {
-                    addMessage(`The logo at the top shows the National University of Science and Technology symbol - that's us here in Bulawayo! 🏫`);
+                    addMessage('Where are you right now?');
                 }, 400);
                 setTimeout(() => {
-                    addMessage('Where are you right now?');
-                }, 1000);
-                setTimeout(() => {
                     showBuildingSelection('start');
-                }, 1400);
+                }, 900);
                 conversationState = 'waiting_start';
             } else {
                 addMessage('What\'s your name?');
@@ -948,54 +950,81 @@
             lastRoute = route;
 
             if (route.length > 0) {
-                addMessage(`Here's your route from ${startBuilding} to ${endBuilding}:`);
+                addMessage(`Here is your route from ${startBuilding} to ${endBuilding}:`);
 
                 // Show the starting building description
                 setTimeout(() => {
                     showBuildingDescription(startBuilding);
                 }, 600);
 
-                // Show step-by-step directions
+                // Show step-by-step directions with turns
                 let stepDelay = 1400;
+                let cumulativeDistance = 0;
+                
                 for (let i = 0; i < route.length - 1; i++) {
                     const from = route[i];
                     const to = route[i + 1];
                     const stepDistance = campusMap[from][to] || 0;
+                    cumulativeDistance += stepDistance;
 
                     const stepNum = i + 1;
-                    const directionMsg = `📍 Step ${stepNum}: Head to ${to} • ${stepDistance}m`;
+                    const nextBuilding = route[i + 1];
+                    const nextDesc = buildingDescriptions[nextBuilding];
+                    
+                    // Create detailed direction instruction
+                    let directionMsg = `Step ${stepNum}: From ${from}, walk ${stepDistance}m towards ${to}. `;
+                    
+                    // Add turn information based on building location
+                    if (i > 0) {
+                        const prevFrom = route[i - 1];
+                        directionMsg = `Step ${stepNum}: Continue walking ${stepDistance}m. `;
+                    }
+                    
+                    // Add what they will see
+                    directionMsg += `You will see: ${nextDesc.visual}`;
 
                     setTimeout(() => {
                         addMessage(directionMsg);
                     }, stepDelay);
                     
-                    stepDelay += 400;
+                    stepDelay += 500;
                 }
+
+                // Show detailed walking instructions before destination
+                setTimeout(() => {
+                    const lastBuilding = route[route.length - 1];
+                    const lastDesc = buildingDescriptions[lastBuilding];
+                    const walkingMsg = `Approaching your destination: ${lastBuilding} is located on the ${lastDesc.location}. Watch for: ${lastDesc.visual}`;
+                    addMessage(walkingMsg);
+                }, stepDelay);
 
                 // Show destination building description
                 setTimeout(() => {
                     showBuildingDescription(endBuilding);
-                }, stepDelay);
+                }, stepDelay + 400);
 
                 // Final summary with distance
                 setTimeout(() => {
                     const walkTime = calculateWalkTime(distance);
                     const summaryHtml = `
                         <div class="route-info">
-                            <strong>✅ Total: ${distance}m • ${walkTime} walk</strong><br>
-                            <strong>📍</strong> ${startBuilding} → ${endBuilding}
+                            <strong>✅ Summary</strong><br>
+                            <strong>From:</strong> ${startBuilding}<br>
+                            <strong>To:</strong> ${endBuilding}<br>
+                            <strong>Total Distance:</strong> ${distance}m (${(distance/1000).toFixed(2)}km)<br>
+                            <strong>Walking Time:</strong> ${walkTime}
                         </div>
                     `;
                     addMessage(summaryHtml, false, true);
-                }, stepDelay + 500);
+                }, stepDelay + 900);
 
                 setTimeout(() => {
                     addMessage(`Need directions to somewhere else?`);
-                }, stepDelay + 1200);
+                }, stepDelay + 1600);
 
                 setTimeout(() => {
                     showYesNoSelection();
-                }, stepDelay + 1700);
+                }, stepDelay + 2100);
 
                 conversationState = 'asking_more_directions';
             } else {
@@ -1031,14 +1060,17 @@
                                 <strong>Location:</strong> ${desc.location} of campus
                             </div>
                             <div class="info-row">
-                                <strong>What to expect:</strong> ${desc.features}
+                                <strong>What you will see:</strong> ${desc.visual}
                             </div>
                             <div class="info-row">
-                                <strong>What it looks like:</strong> ${desc.visual}
+                                <strong>Purpose:</strong> ${desc.features}
                             </div>
                             <div class="info-row">
                                 <strong>Architecture:</strong> ${desc.architecture}
                             </div>
+                            ${desc.directions ? `<div class="info-row">
+                                <strong>Navigation tip:</strong> ${desc.directions}
+                            </div>` : ''}
                         </div>
                     </div>
                 `;
