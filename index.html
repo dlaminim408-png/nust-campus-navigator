@@ -341,6 +341,65 @@
             margin: 4px 0;
         }
 
+        .route-summary {
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+            border: 1px solid #d4dce6;
+            padding: 18px;
+            border-radius: 14px;
+            margin: 12px 0;
+            animation: slideInLeft 0.4s ease;
+            box-shadow: 0 2px 8px rgba(0, 26, 77, 0.08);
+        }
+
+        .route-summary:hover {
+            box-shadow: 0 4px 12px rgba(0, 26, 77, 0.12);
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+
+        .summary-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .summary-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .summary-line .from,
+        .summary-line .to,
+        .summary-line .label {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 100px;
+        }
+
+        .summary-line .value {
+            text-align: right;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4dce6, transparent);
+            margin: 4px 0;
+        }
+
         .building-info {
             background: linear-gradient(135deg, rgba(0, 180, 216, 0.06) 0%, rgba(0, 217, 255, 0.06) 100%);
             border-left: 5px solid var(--accent);
@@ -950,16 +1009,12 @@
             lastRoute = route;
 
             if (route.length > 0) {
-                addMessage(`Here is your route from ${startBuilding} to ${endBuilding}:`);
+                addMessage(`Calculating optimal route using Dijkstra's algorithm...`);
 
-                // Show the starting building description
-                setTimeout(() => {
-                    showBuildingDescription(startBuilding);
-                }, 600);
-
-                // Show step-by-step directions with turns
-                let stepDelay = 1400;
+                // Build detailed turn-by-turn instructions
+                let turnByTurnInstructions = [];
                 let cumulativeDistance = 0;
+                const directions = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest'];
                 
                 for (let i = 0; i < route.length - 1; i++) {
                     const from = route[i];
@@ -967,68 +1022,122 @@
                     const stepDistance = campusMap[from][to] || 0;
                     cumulativeDistance += stepDistance;
 
-                    const stepNum = i + 1;
-                    const nextBuilding = route[i + 1];
-                    const nextDesc = buildingDescriptions[nextBuilding];
+                    const fromDesc = buildingDescriptions[from];
+                    const toDesc = buildingDescriptions[to];
                     
-                    // Create detailed direction instruction
-                    let directionMsg = `Step ${stepNum}: From ${from}, walk ${stepDistance}m towards ${to}. `;
+                    // Determine turn direction based on building locations
+                    let turnDirection = '';
+                    const fromLocation = fromDesc.location;
+                    const toLocation = toDesc.location;
                     
-                    // Add turn information based on building location
-                    if (i > 0) {
-                        const prevFrom = route[i - 1];
-                        directionMsg = `Step ${stepNum}: Continue walking ${stepDistance}m. `;
+                    if (i === 0) {
+                        turnDirection = 'Start at';
+                        turnByTurnInstructions.push({
+                            step: i + 1,
+                            instruction: `${turnDirection} ${from}`,
+                            distance: 0,
+                            cumulative: 0,
+                            visual: fromDesc.visual
+                        });
                     }
                     
-                    // Add what they will see
-                    directionMsg += `You will see: ${nextDesc.visual}`;
-
-                    setTimeout(() => {
-                        addMessage(directionMsg);
-                    }, stepDelay);
+                    // Determine turn based on location transitions
+                    if (fromLocation.includes('Southern') && toLocation.includes('Northern')) {
+                        turnDirection = 'Turn right (north)';
+                    } else if (fromLocation.includes('Northern') && toLocation.includes('Southern')) {
+                        turnDirection = 'Turn left (south)';
+                    } else if (fromLocation.includes('Southern') && toLocation.includes('Eastern')) {
+                        turnDirection = 'Turn right (northeast)';
+                    } else if (fromLocation.includes('Eastern') && toLocation.includes('Southern')) {
+                        turnDirection = 'Turn left (southwest)';
+                    } else if (fromLocation.includes('Eastern') && toLocation.includes('Western')) {
+                        turnDirection = 'Turn left (west)';
+                    } else if (fromLocation.includes('Western') && toLocation.includes('Eastern')) {
+                        turnDirection = 'Turn right (east)';
+                    } else if (fromLocation.includes('Western') && toLocation.includes('Southern')) {
+                        turnDirection = 'Turn right (southeast)';
+                    } else {
+                        turnDirection = 'Continue to';
+                    }
                     
-                    stepDelay += 500;
+                    turnByTurnInstructions.push({
+                        step: i + 1,
+                        instruction: `${turnDirection} ${to}`,
+                        distance: stepDistance,
+                        cumulative: cumulativeDistance,
+                        visual: toDesc.visual
+                    });
                 }
 
-                // Show detailed walking instructions before destination
-                setTimeout(() => {
-                    const lastBuilding = route[route.length - 1];
-                    const lastDesc = buildingDescriptions[lastBuilding];
-                    const walkingMsg = `Approaching your destination: ${lastBuilding} is located on the ${lastDesc.location}. Watch for: ${lastDesc.visual}`;
-                    addMessage(walkingMsg);
-                }, stepDelay);
+                // Show turn-by-turn directions
+                let dirDelay = 800;
+                for (let instr of turnByTurnInstructions) {
+                    setTimeout(() => {
+                        if (instr.step === 1) {
+                            const msg = `✓ Start at ${instr.instruction.replace('Start at ', '')} (${buildingDescriptions[instr.instruction.split(' ').pop()].location})`;
+                            addMessage(msg);
+                        } else {
+                            const msg = `${instr.instruction} (${instr.distance}m)`;
+                            addMessage(msg);
+                        }
+                    }, dirDelay);
+                    dirDelay += 300;
+                }
 
-                // Show destination building description
+                // Show destination details
+                setTimeout(() => {
+                    const destDesc = buildingDescriptions[endBuilding];
+                    addMessage(`📍 Arriving at: ${destDesc.visual}`);
+                }, dirDelay);
+
+                // Show destination building card
                 setTimeout(() => {
                     showBuildingDescription(endBuilding);
-                }, stepDelay + 400);
+                }, dirDelay + 400);
 
-                // Final summary with distance
+                // Show AI-style summary with algorithm details
                 setTimeout(() => {
                     const walkTime = calculateWalkTime(distance);
+                    
                     const summaryHtml = `
-                        <div class="route-info">
-                            <strong>✅ Summary</strong><br>
-                            <strong>From:</strong> ${startBuilding}<br>
-                            <strong>To:</strong> ${endBuilding}<br>
-                            <strong>Total Distance:</strong> ${distance}m (${(distance/1000).toFixed(2)}km)<br>
-                            <strong>Walking Time:</strong> ${walkTime}
+                        <div class="route-summary">
+                            <div class="summary-header">Route Summary</div>
+                            <div class="summary-body">
+                                <div class="summary-line">
+                                    <span class="from">From:</span>
+                                    <span class="value">${startBuilding}</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span class="to">To:</span>
+                                    <span class="value">${endBuilding}</span>
+                                </div>
+                                <div class="summary-divider"></div>
+                                <div class="summary-line">
+                                    <span class="label">Distance:</span>
+                                    <span class="value">${distance}m (${(distance/1000).toFixed(2)}km)</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span class="label">Est. Time:</span>
+                                    <span class="value">${walkTime}</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span class="label">Best Route:</span>
+                                    <span class="value">${route.join(' → ')}</span>
+                                </div>
+                            </div>
                         </div>
                     `;
                     addMessage(summaryHtml, false, true);
-                }, stepDelay + 900);
+                }, dirDelay + 900);
 
+                // Single close-ended message instead of asking repetitively
                 setTimeout(() => {
-                    addMessage(`Need directions to somewhere else?`);
-                }, stepDelay + 1600);
+                    addMessage(`${userName}, your route is ready. Safe travels! 🎯`);
+                }, dirDelay + 1600);
 
-                setTimeout(() => {
-                    showYesNoSelection();
-                }, stepDelay + 2100);
-
-                conversationState = 'asking_more_directions';
+                conversationState = 'waiting_start';
             } else {
-                addMessage(`Sorry, I don't have a route between those buildings. Try another destination.`);
+                addMessage(`No route available between ${startBuilding} and ${endBuilding}. Try a different destination.`);
                 setTimeout(() => {
                     showBuildingSelection('end');
                 }, 800);
